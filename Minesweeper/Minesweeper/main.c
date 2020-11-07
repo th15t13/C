@@ -103,8 +103,8 @@ void game(){
 	init(gameMap, mineMap);
 	int openedBlockCount = 0;
 	while (1){
-		printMap(mineMap);
-		printf("=================================\n");
+		//printMap(mineMap);
+		//printf("=================================\n");
 		printMap(gameMap);
 		int row = 0;
 		int col = 0;
