@@ -22,7 +22,6 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize){
 int main(){
 
 	int arr[] = { 2, 7, 11, 15 };
-	//int arr1[2] = { 0 };
 	int returnSize = -1;
 	int* p = &returnSize;
 	int* result = twoSum(arr, 4, 9, p);
