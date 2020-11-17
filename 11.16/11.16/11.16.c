@@ -1,10 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
+#include <assert.h>
 
 #pragma warning(disable:4996)
 
-char* myStrStr(char* haystack, char* needle){
+int MyStrLen(char* str){
+	if (str == NULL){
+		return 0;
+	}
+	int ret = 0;
+	while (*str != '\0'){
+		ret++;
+		str++;
+	}
+	return ret;
+}
+
+char *myStrStr1(char* haystack, char* needle){
+	if (haystack == NULL || needle == NULL) {
+		return NULL;
+	}
 	char* ret = NULL;
 	for (int i = 0; i < (int)strlen(haystack); i++){
 		if (*(haystack + i) == *needle){
@@ -22,55 +38,87 @@ char* myStrStr(char* haystack, char* needle){
 	return ret;
 }
 
-char* myStrCpy(char* dest, char* src){
-	for (int i = 0; i <= (int)strlen(src); i++){
-		*(dest + i) = *(src + i);
+const char* myStrStr(const char* haystack, const char* needle) {
+	if (haystack == NULL || needle == NULL) {
+		return NULL;
 	}
-	return dest;
+
+	const char* patrolHay = haystack;
+	while (*patrolHay != '\0') {
+		const char* patrolNee = patrolHay;
+		const char* patrolSub = needle;
+		while (*patrolNee != '\0' && *patrolSub != '\0' &&
+			*patrolNee == *patrolSub){
+			patrolNee++;
+			patrolSub++;
+		}
+		if (*patrolSub == '\0'){
+			return patrolHay;
+		}
+		patrolHay++;
+	}
+	return NULL;
 }
 
-int myStrCmp(char* str1, char* str2){
-	int ret = 0;
-	int i = 0;
-	while (*(str1 + i) != '\0' && *(str2 + i) != '\0'){
-		ret += *(str1 + i) - *(str2 + i);
-		i++;
+char* myStrCpy(char* dest, const char* src){
+	if (dest == NULL || src == NULL) {
+		return NULL;
 	}
-	if (*(str1 + i) == '\0'){
-		while (*(str2 + i) != '\0')
-		{
-			ret += *(str2 + i);
-			i++;
-		}
+	while (*src != '\0'){
+		*dest = *src;
+		src++;
+		dest++;
 	}
-	if (*(str2 + i) == '\0'){
-		while (*(str1 + i) != '\0')
-		{
-			ret += *(str1 + i);
-			i++;
-		}
-	}
-	if (ret > 0){
-		ret = 1;
-	}
-	if (ret < 0){
-		ret = -1;
-	}
-	if (ret == 0){
-		ret = 0;
-	}
-	return ret;
+	*dest = '\0';
+	return dest;
 }
 
 char* myStrCat(char* dest, const char* src){
-	int i = 0;
-	while (*(dest + i) != '\0'){
-		i++;
+	char* patrol = dest;
+	while (*patrol != '\0'){
+		patrol++;
 	}
-	for (int j = 0; j <= (int)strlen(src); j++){
-		*(dest + i + j) = *(src + j);
+	while (*src != '\0'){
+		*patrol = *src;
+		src++;
+		patrol++;
 	}
+	*patrol = '\0';
 	return dest;
+}
+
+int myStrCmp(const char* str1, const char* str2){
+	assert(str1 != NULL && str2 != NULL);
+	int ret = 0;
+	while (*str1 != '\0' && *str2 != '\0'){
+		ret = *str1 - *str2;
+		if (ret != 0){
+			if (ret > 0){
+				ret = 1;
+				return ret;
+			}
+			if (ret < 0){
+				ret = -1;
+				return ret;
+			}
+		}
+		str1++;
+		str2++;
+	}
+	if (*str1 == '\0' && *str2 == '\0'){
+		if (ret == 0){//若长度一样，且ret为零，则两字符串相等。
+			return ret;
+		}
+	}
+	if (*str1 == '\0'){
+		ret = -1;
+		return ret;
+	}
+	if (*str2 == '\0'){
+		ret = 1;
+		return ret;
+	}
+	return ret;
 }
 
 int main()
@@ -79,7 +127,7 @@ int main()
 	//char haystack[20] = "Just a test";
 	//char needle[10] = "st";
 	//char notFound[10] = "notFound";
-	//char *ret;
+	//const char* ret;
 
 	//ret = myStrStr(haystack, needle);
 	//printf("子字符串是： %s\n", ret);
@@ -98,7 +146,7 @@ int main()
 
 	//myStrCmp
 	//char str1[15] = "abcdef";
-	//char str2[15] = "ABCDEF";
+	//char str2[15] = "acdef";
 
 	//printf("strcmp返回值:%d\n", strcmp(str1, str2));
 	//printf("myStrCmp返回值:%d\n", myStrCmp(str1, str2));
