@@ -17,11 +17,11 @@ int MyStrLen(char* str){
 	return ret;
 }
 
-char *myStrStr1(char* haystack, char* needle){
+const char *myStrStr1(char* haystack, char* needle){
 	if (haystack == NULL || needle == NULL) {
 		return NULL;
 	}
-	char* ret = NULL;
+	const char* ret = NULL;
 	for (int i = 0; i < (int)strlen(haystack); i++){
 		if (*(haystack + i) == *needle){
 			ret = haystack + i;
@@ -42,20 +42,19 @@ const char* myStrStr(const char* haystack, const char* needle) {
 	if (haystack == NULL || needle == NULL) {
 		return NULL;
 	}
-
-	const char* patrolHay = haystack;
-	while (*patrolHay != '\0') {
-		const char* patrolNee = patrolHay;
-		const char* patrolSub = needle;
-		while (*patrolNee != '\0' && *patrolSub != '\0' &&
-			*patrolNee == *patrolSub){
-			patrolNee++;
-			patrolSub++;
+	const char* ptrlHay = haystack;
+	while (*ptrlHay != '\0') {
+		const char* ptrlNee = ptrlHay;
+		const char* ptrlSub = needle;
+		while (*ptrlNee != '\0' && *ptrlSub != '\0' &&
+			*ptrlNee == *ptrlSub){
+			ptrlNee++;
+			ptrlSub++;
 		}
-		if (*patrolSub == '\0'){
-			return patrolHay;
+		if (*ptrlSub == '\0'){
+			return ptrlHay;
 		}
-		patrolHay++;
+		ptrlHay++;
 	}
 	return NULL;
 }
@@ -64,26 +63,30 @@ char* myStrCpy(char* dest, const char* src){
 	if (dest == NULL || src == NULL) {
 		return NULL;
 	}
+	char* p = dest;
 	while (*src != '\0'){
-		*dest = *src;
+		*p = *src;
 		src++;
-		dest++;
+		p++;
 	}
-	*dest = '\0';
+	*p = '\0';
 	return dest;
 }
 
 char* myStrCat(char* dest, const char* src){
-	char* patrol = dest;
-	while (*patrol != '\0'){
-		patrol++;
+	if (dest == NULL || src == NULL) {
+		return dest;
+	}
+	char* p = dest;
+	while (*p != '\0'){
+		p++;
 	}
 	while (*src != '\0'){
-		*patrol = *src;
+		*p = *src;
 		src++;
-		patrol++;
+		p++;
 	}
-	*patrol = '\0';
+	*p = '\0';
 	return dest;
 }
 
