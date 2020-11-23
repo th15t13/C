@@ -6,9 +6,12 @@
 typedef struct Person{
 	char name[1024];
 	char tel[1024];
+	char gender[1024];
+	int age;
+	char address[1024];
 }Person;
 
-#define MAX_SIZE 1024
+#define MAX_SIZE 1000
 typedef struct AddressBook{
 	Person persons[MAX_SIZE];
 	int size;
@@ -22,6 +25,7 @@ int menu(){
 	printf("4.修改联系人\n");
 	printf("5.查看所有联系人\n");
 	printf("6.清空所有联系人\n");
+	printf("7.按姓名排序\n");
 	printf("0.退出\n");
 	printf("=================\n");
 	printf("请输入选项# ");
@@ -45,10 +49,15 @@ void addPerson(AddressBook* addressBook){
 		scanf("%s", addressBook->persons[currentSize].name);
 		printf("请输入号码# ");
 		scanf("%s", addressBook->persons[currentSize].tel);
+		printf("请输入性别# ");
+		scanf("%s", addressBook->persons[currentSize].gender);
+		printf("请输入年龄# ");
+		scanf("%d", &addressBook->persons[currentSize].age);
+		printf("请输入住址# ");
+		scanf("%s", addressBook->persons[currentSize].address);
 		printf("OK!\n");
 		addressBook->size++;
 	}
-
 }
 
 void searchPerson(AddressBook* addressBook){
@@ -57,8 +66,9 @@ void searchPerson(AddressBook* addressBook){
 	scanf("%s", &name);
 	for (int i = 0; i < addressBook->size; i++){
 		if (strcmp(name, addressBook->persons[i].name) == 0){
-			printf("[%d]\t\t%s\t\t%s\n", i, addressBook->persons[i].name,
-				addressBook->persons[i].tel);
+			printf("[%d]\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s\n", i, addressBook->persons[i].name,
+				addressBook->persons[i].tel, addressBook->persons[i].gender,
+				addressBook->persons[i].age, addressBook->persons[i].address);
 		}
 	}
 }
@@ -71,7 +81,7 @@ void delPerson(AddressBook* addressBook){
 		printf("输入有误!\n");
 		return;
 	}
-	else if (id = addressBook->size - 1){
+	else if (id == addressBook->size - 1){
 		addressBook->size--;
 		printf("Done!\n");
 		return;
@@ -97,6 +107,12 @@ void editPerson(AddressBook* addressBook){
 		scanf("%s", addressBook->persons[id].name);
 		printf("请输入号码# ");
 		scanf("%s", addressBook->persons[id].tel);
+		printf("请输入性别# ");
+		scanf("%s", addressBook->persons[id].gender);
+		printf("请输入年龄# ");
+		scanf("%d", &addressBook->persons[id].age);
+		printf("请输入住址# ");
+		scanf("%s", addressBook->persons[id].address);
 		printf("OK!\n");
 		printf("Done!\n");
 		return;
@@ -105,8 +121,9 @@ void editPerson(AddressBook* addressBook){
 
 void list(AddressBook* addressBook){
 	for (int i = 0; i < addressBook->size; i++){
-		printf("[%d]\t\t%s\t\t%s\n", i, addressBook->persons[i].name,
-			addressBook->persons[i].tel);
+		printf("[%d]\t\t%s\t\t%s\t\t%s\t\t%d\t\t%s\n", i, addressBook->persons[i].name,
+			addressBook->persons[i].tel, addressBook->persons[i].gender,
+			addressBook->persons[i].age, addressBook->persons[i].address);
 	}
 }
 
@@ -119,6 +136,9 @@ void empty(AddressBook* addressBook){
 		addressBook->size = 0;
 		strcpy(addressBook->persons[0].name, "");
 		strcpy(addressBook->persons[0].tel, "");
+		strcpy(addressBook->persons[0].gender, "");
+		strcpy(addressBook->persons[0].address, "");
+		addressBook->persons[0].age = 0;
 		printf("Done!\n");
 		return;
 	}
@@ -129,6 +149,20 @@ void empty(AddressBook* addressBook){
 	{
 		printf("输入有误!\n");
 		return;
+	}
+}
+
+void sortByName(AddressBook* addressBook){
+	Person tmp;
+	for (int i = 0; i < addressBook->size - 1; i++){
+		for (int j = 0; j < addressBook->size - i - 1; j++){
+			if (strcmp(addressBook->persons[j].name,
+				addressBook->persons[j + 1].name) > 0){
+				tmp = addressBook->persons[j + 1];
+				addressBook->persons[j + 1] = addressBook->persons[j];
+				addressBook->persons[j] = tmp;
+			}
+		}
 	}
 }
 
@@ -143,7 +177,8 @@ int main(){
 		delPerson,
 		editPerson,
 		list,
-		empty
+		empty,
+		sortByName
 	};
 	init(&addressBook);
 	while (1){
